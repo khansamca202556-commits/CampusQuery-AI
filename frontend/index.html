@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CampusQuery AI</title>
+<link rel="stylesheet" href="/static/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L2 8l10 5 10-5-10-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M6 10.5v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">CampusQuery AI</span>
+        <span class="brand-subtitle">College Database Assistant</span>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <button class="nav-item is-active" data-view="chat" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span>Chat</span>
+      </button>
+      <button class="nav-item" data-view="schema" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="6" rx="7" ry="3" stroke="currentColor" stroke-width="1.6"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6" stroke="currentColor" stroke-width="1.6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Schema</span>
+      </button>
+      <button class="nav-item" data-view="examples" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 4.9L19.5 9l-3.8 3.5.9 5.3L12 15.4l-4.6 2.4.9-5.3L4.5 9l5.3-1.1L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span>Examples</span>
+      </button>
+      <button class="nav-item" data-view="history" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>History</span>
+      </button>
+      <button class="nav-item" data-view="settings" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-2-1.2L14 3h-4l-.5 2.6a7.4 7.4 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 2 1.2L10 21h4l.5-2.6a7.4 7.4 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.07-.4.1-.8.1-1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="db-info-card">
+      <div class="db-info-title">College Database</div>
+      <div class="db-info-count">3 Tables</div>
+      <div class="db-info-tables">Students &middot; Courses &middot; Departments</div>
+    </div>
+
+    <div class="sidebar-status">
+      <span class="status-dot" id="sidebar-status-dot"></span>
+      <span id="sidebar-status-text">Checking status&hellip;</span>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ---------- CHAT VIEW ---------- -->
+    <section class="view is-active" id="view-chat">
+      <header class="view-header">
+        <div>
+          <h1>Welcome to CampusQuery AI</h1>
+          <p>Talk to your college database in plain English</p>
+        </div>
+        <div class="status-pill" id="connection-status">
+          <span class="status-pill-dot"></span>
+          <span class="status-pill-text">Checking&hellip;</span>
+        </div>
+      </header>
+
+      <div class="chat-area">
+        <div id="welcome-hero" class="welcome-hero">
+          <p class="welcome-tagline">Ask Questions &bull; Find Insights &bull; Manage Records</p>
+          <p class="welcome-hint">Try asking:</p>
+          <div class="suggestions" id="welcome-suggestions">
+            <button class="chip" type="button" data-query="Who has the highest marks?">Highest Marks</button>
+            <button class="chip" type="button" data-query="How many students are there?">Student Count</button>
+            <button class="chip" type="button" data-query="Show all courses">All Courses</button>
+            <button class="chip" type="button" data-query="List students by marks">Top Students</button>
+            <button class="chip" type="button" data-query="Which department has the most students?">Departments</button>
+          </div>
+        </div>
+
+        <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
+      </div>
+
+      <form class="chat-input-bar" id="chat-form">
+        <textarea
+          id="chat-input"
+          placeholder="Ask your college database anything..."
+          rows="1"
+          aria-label="Message CampusQuery AI"
+        ></textarea>
+        <button type="submit" id="send-btn" aria-label="Send message">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l16-7-6.5 16-2.5-7-7-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- ---------- SCHEMA VIEW ---------- -->
+    <section class="view" id="view-schema">
+      <header class="view-header">
+        <div>
+          <h1>Database Schema</h1>
+          <p>How the college database is structured</p>
+        </div>
+      </header>
+      <div class="view-body" id="schema-content">
+        <p class="muted">Loading schema&hellip;</p>
+      </div>
+    </section>
+
+    <!-- ---------- EXAMPLES VIEW ---------- -->
+    <section class="view" id="view-examples">
+      <header class="view-header">
+        <div>
+          <h1>Examples</h1>
+          <p>Tap any example to ask it right away</p>
+        </div>
+      </header>
+      <div class="view-body">
+        <div class="example-group">
+          <h2>Students</h2>
+          <div class="example-list">
+            <button class="example-btn" data-query="Who has the highest marks?">Who has the highest marks?</button>
+            <button class="example-btn" data-query="Show students above 80 marks">Show students above 80 marks</button>
+            <button class="example-btn" data-query="List students by marks, highest first">List students by marks, highest first</button>
+            <button class="example-btn" data-query="Which city has the most students?">Which city has the most students?</button>
+          </div>
+        </div>
+        <div class="example-group">
+          <h2>Courses</h2>
+          <div class="example-list">
+            <button class="example-btn" data-query="Show all courses">Show all courses</button>
+            <button class="example-btn" data-query="Show students with their course names">Show students with their course names</button>
+            <button class="example-btn" data-query="How long is the MCA course?">How long is the MCA course?</button>
+          </div>
+        </div>
+        <div class="example-group">
+          <h2>Departments</h2>
+          <div class="example-list">
+            <button class="example-btn" data-query="Which department has the most students?">Which department has the most students?</button>
+            <button class="example-btn" data-query="List all departments">List all departments</button>
+          </div>
+        </div>
+        <div class="example-group">
+          <h2>Analytics</h2>
+          <div class="example-list">
+            <button class="example-btn" data-query="What is the average marks of all students?">What is the average marks of all students?</button>
+            <button class="example-btn" data-query="How many students are there?">How many students are there?</button>
+            <button class="example-btn" data-query="What is the highest and lowest marks?">What is the highest and lowest marks?</button>
+          </div>
+        </div>
+        <div class="example-group">
+          <h2>Managing records</h2>
+          <div class="example-list">
+            <button class="example-btn" data-query="Add a student named Kabir with 89 marks in course id 1 from Mumbai">Add a student named Kabir with 89 marks</button>
+            <button class="example-btn" data-query="Update Rahul Sharma's marks to 97">Update Rahul Sharma's marks to 97</button>
+            <button class="example-btn" data-query="Delete the student named Kabir">Delete the student named Kabir</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- HISTORY VIEW ---------- -->
+    <section class="view" id="view-history">
+      <header class="view-header">
+        <div>
+          <h1>History</h1>
+          <p>Past conversations, saved on this device</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="history-new-chat" type="button">New Chat</button>
+          <button class="btn btn-ghost" id="history-clear" type="button">Clear History</button>
+        </div>
+      </header>
+      <div class="view-body">
+        <div id="history-list" class="history-list"></div>
+      </div>
+    </section>
+
+    <!-- ---------- SETTINGS VIEW ---------- -->
+    <section class="view" id="view-settings">
+      <header class="view-header">
+        <div>
+          <h1>Settings</h1>
+          <p>Preferences for this device</p>
+        </div>
+      </header>
+      <div class="view-body">
+        <div class="settings-card">
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-title">Dark theme</div>
+              <div class="settings-row-desc">Switch between light and dark appearance</div>
+            </div>
+            <button class="switch" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle dark theme">
+              <span class="switch-knob"></span>
+            </button>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-row-title">Clear conversation history</div>
+              <div class="settings-row-desc">Remove all saved conversations from this device</div>
+            </div>
+            <button class="btn btn-ghost" id="settings-clear-history" type="button">Clear History</button>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-row-title">About CampusQuery AI</div>
+          <p class="about-text">
+          CampusQuery AI lets you explore a college database using plain English.
+          It understands your request, generates the appropriate query, retrieves
+          the required information, and explains the result in simple language.
+          Generated SQL can be viewed when needed, while database changes always
+          require confirmation first.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
